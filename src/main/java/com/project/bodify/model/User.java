@@ -26,6 +26,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -78,7 +79,7 @@ public class User implements UserDetails {
     private String tokenfcm;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt=LocalDateTime.now();
 
     @LastModifiedDate
     private LocalDateTime updatedAt;

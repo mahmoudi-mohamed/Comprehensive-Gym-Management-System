@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.project.bodify.model.SubscriptionPlan;
 import com.project.bodify.repository.SubscriptionPlanRepository;
-import com.project.bodify.service.ProduitService;
+
 
 @Service
-public  class SubscriptionPlanService implements ProduitService {
+public  class SubscriptionPlanService {
 	
 	@Autowired
     private SubscriptionPlanRepository subscriptionPlanRepository;

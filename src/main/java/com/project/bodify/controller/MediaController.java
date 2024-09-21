@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/media")
@@ -37,8 +39,8 @@ public class MediaController {
     
     
 
-    @PostMapping
-    public ResponseEntity<Media> addMedia(@RequestParam String description, @RequestParam List<MultipartFile> files,List<Long> tags) throws Exception {
+    @PostMapping("/image")
+    public ResponseEntity<Media> addMediaimage(@RequestParam String description, @RequestParam List<MultipartFile> files,List<Long> tags) throws Exception {
         /*if (!isAdmin()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }*/
@@ -51,9 +53,37 @@ public class MediaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newMedia);
     }
     
+    @PostMapping("/imageurl")
+    public ResponseEntity<Media> addMediaimageurl(@RequestParam String description, @RequestParam String image) throws Exception {
+        /*if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Authentication failed or user not authenticated");
+        }
+        User user = (User) authentication.getPrincipal();
+        Media newMedia = mediaServiceImpl.addMedia(description, user.getId(), "IMAGE", image);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newMedia);
+    }
     
     
     
+    
+    
+    @PostMapping("/text")
+    public ResponseEntity<Media> addMediatext(@RequestParam String description) throws Exception {
+        /*if (!isAdmin()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Authentication failed or user not authenticated");
+        }
+        User user = (User) authentication.getPrincipal();
+        Media newMedia = mediaServiceImpl.addMediatext(description,user.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newMedia);
+    }
     
     
     
@@ -107,10 +137,12 @@ public class MediaController {
                 imageName = media.getMedia().get(0).getName();
             }
             
-            MediaDtoresponse dto = new MediaDtoresponse(media.getId(),media.getAuthorId(), userServiceImpl.getUserbyid(media.getAuthorId()).get().getFirstName()+" "+userServiceImpl.getUserbyid(media.getAuthorId()).get().getLastName(), media.getDescription(), imageName, null, null, null, media.getViewsliste().size()+"", media.getLiksliste().size()+"");
+            MediaDtoresponse dto = new MediaDtoresponse(media.getId(),media.getAuthorId(), userServiceImpl.getUserbyid(media.getAuthorId()).get().getFirstName()+" "+userServiceImpl.getUserbyid(media.getAuthorId()).get().getLastName(), media.getDescription(), media.getUrlimage(), media.getViewsliste().stream().map(Object::toString)
+                    .collect(Collectors.toUnmodifiableList()),  media.getLiksliste().stream().map(Object::toString)
+                    .collect(Collectors.toUnmodifiableList()),null, media.getViewsliste().size()+"", media.getLiksliste().size()+"",media.getPost_type(),media.getPublish_date().toLocalDate());
             dtoResponses.add(dto);
         }
-
+        Collections.reverse(dtoResponses);
         return ResponseEntity.ok(dtoResponses);
     }
     
@@ -125,7 +157,7 @@ public class MediaController {
        MediaDtoresponse dtoResponses;
        String imageName = null;
        imageName = media.get().getMedia().get(0).getName();
-       return  dtoResponses=new MediaDtoresponse(media.get().getId(),media.get().getAuthorId(), userServiceImpl.getUserbyid(media.get().getAuthorId()).get().getFirstName()+" "+userServiceImpl.getUserbyid(media.get().getAuthorId()).get().getLastName(), media.get().getDescription(), imageName, null, null, null, media.get().getViewsliste().size()+"", media.get().getLiksliste().size()+"");
+       return  dtoResponses=new MediaDtoresponse(media.get().getId(),media.get().getAuthorId(), userServiceImpl.getUserbyid(media.get().getAuthorId()).get().getFirstName()+" "+userServiceImpl.getUserbyid(media.get().getAuthorId()).get().getLastName(), media.get().getDescription(), imageName, null, null, null, media.get().getViewsliste().size()+"", media.get().getLiksliste().size()+"",media.get().getPost_type(),media.get().getPublish_date().toLocalDate());
         
       
     }
@@ -144,9 +176,10 @@ public class MediaController {
                  imageName = media.getMedia().get(0).getName();
              }
              
-             MediaDtoresponse dto = new MediaDtoresponse(media.getId(),media.getAuthorId(), userServiceImpl.getUserbyid(media.getAuthorId()).get().getFirstName()+" "+userServiceImpl.getUserbyid(media.getAuthorId()).get().getLastName(), media.getDescription(), imageName, null, null, null, media.getViewsliste().size()+"", media.getLiksliste().size()+"");
+             MediaDtoresponse dto = new MediaDtoresponse(media.getId(),media.getAuthorId(), userServiceImpl.getUserbyid(media.getAuthorId()).get().getFirstName()+" "+userServiceImpl.getUserbyid(media.getAuthorId()).get().getLastName(), media.getDescription(), imageName, null, null, null, media.getViewsliste().size()+"", media.getLiksliste().size()+"",media.getPost_type(),media.getPublish_date().toLocalDate());
              dtoResponses.add(dto);
          }
+         Collections.reverse(dtoResponses);
 
          return ResponseEntity.ok(dtoResponses);
       
@@ -157,14 +190,14 @@ public class MediaController {
     
     
     @PutMapping("/liks/{id}")
-    public MediaDtoresponse updateliks(@PathVariable Long id) {
+    public long updateliks(@PathVariable Long id) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new RuntimeException("Authentication failed or user not authenticated");
         }
         User user = (User) authentication.getPrincipal();
     	mediaServiceImpl.changeliks(user.getId(), id);
-    return	getMediaById(id);
+    return	id;
         }
     
     

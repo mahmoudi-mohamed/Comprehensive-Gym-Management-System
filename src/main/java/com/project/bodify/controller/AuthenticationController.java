@@ -1,6 +1,8 @@
 package com.project.bodify.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,8 +81,65 @@ public class AuthenticationController {
             throw new RuntimeException("Authentication failed or user not authenticated");
         }
         User user = (User) authentication.getPrincipal();
-        return new UserDto(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getEmail());
+        return new UserDto(
+        	    user.getId(), 
+        	    user.getFirstName() + " " + user.getLastName(), 
+        	    user.getEmail(),
+        	    user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate() : null, 
+        	    user.getAuthorities().size() > 0 ? user.getAuthorities().iterator().next().toString() : "No Authorities"
+        	
+);
     }
+    
+    
+    @GetMapping("/user/{id}")
+    private UserDto userbyid(@PathVariable long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Authentication failed or user not authenticated");
+        }
+        User user = userServiceImpl.getUserbyid(id).get();
+       return new UserDto(
+    		    user.getId(), 
+    		    user.getFirstName() + " " + user.getLastName(), 
+    		    user.getEmail(),
+    		    user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate() : null, 
+    		    user.getAuthorities().size() > 0 ? user.getAuthorities().iterator().next().toString() : "No Authorities"
+    		
+);
+
+    }
+    
+    
+    
+    
+    
+    @GetMapping("/allusers")
+    private List<UserDto>  allusers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Authentication failed or user not authenticated");
+        }
+        List<UserDto>  alluserdto=new ArrayList<UserDto>();
+        List<User> users =userServiceImpl.allusers();
+        for (User user : users) {
+        	alluserdto.add( 	new UserDto(
+        		    user.getId(), 
+        		    user.getFirstName() + " " + user.getLastName(), 
+        		    user.getEmail(),
+        		    user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate() : null, 
+        		    user.getAuthorities().size() > 0 ? user.getAuthorities().iterator().next().toString() : "No Authorities"
+        		)
+);
+        	
+		}
+        
+        
+        return alluserdto;
+    }
+    
+    
+    
     
     
     

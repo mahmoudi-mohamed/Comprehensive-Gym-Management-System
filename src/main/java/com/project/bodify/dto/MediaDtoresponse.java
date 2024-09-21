@@ -1,5 +1,7 @@
 package com.project.bodify.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +28,12 @@ public  class MediaDtoresponse {
 	  private String author;
 	    private String description;
 	    private String image;
-	    private List<String> viewsliste=new ArrayList<>();;
-	    private List<String> liksliste=new ArrayList<>();;
+	    private List<String> viewsliste=new ArrayList<>();
+	    private List<String> liksliste=new ArrayList<>();
 	    private List<String> TagsList = new ArrayList<>();
 	    private String nbview;
 	    private String nbliks;
+	    private String post_type="TEXT";
+	    private LocalDate publish_date;
 	
 }

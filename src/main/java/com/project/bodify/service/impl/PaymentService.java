@@ -12,10 +12,10 @@ import com.project.bodify.model.Payment;
 import com.project.bodify.model.SubscriptionPlan;
 import com.project.bodify.repository.PaymentRepository;
 import com.project.bodify.repository.SubscriptionPlanRepository;
-import com.project.bodify.service.ProduitService;
+
 
 @Service
-public  class PaymentService implements ProduitService {
+public  class PaymentService {
 	
 	 @Autowired
 	    private PaymentRepository paymentRepository;

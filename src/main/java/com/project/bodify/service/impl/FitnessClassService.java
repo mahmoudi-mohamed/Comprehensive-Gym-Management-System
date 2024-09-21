@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.project.bodify.model.FitnessClass;
 import com.project.bodify.repository.FitnessClassRepository;
-import com.project.bodify.service.ProduitService;
 
 @Service
-public  class FitnessClassService implements ProduitService {
+public  class FitnessClassService {
 	
 	@Autowired
     private FitnessClassRepository fitnessClassRepository;

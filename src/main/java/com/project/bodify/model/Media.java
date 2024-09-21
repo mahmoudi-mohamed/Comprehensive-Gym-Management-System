@@ -1,6 +1,7 @@
 package com.project.bodify.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+
+import com.google.api.client.util.Data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,12 +41,13 @@ public class Media implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "media_id", referencedColumnName = "id")
     private List<Files> media;
-
+private LocalDateTime publish_date=LocalDateTime.now();
     private String description;
     private String status = "ACTIVE";
     private String urlvideo;
     private Long authorId;
-
+    private String post_type="TEXT";
+    private String urlimage;
     @ElementCollection
     @CollectionTable(name = "media_views", joinColumns = @JoinColumn(name = "media_id"))
     @Column(name = "view_id")
@@ -75,5 +79,20 @@ public class Media implements Serializable {
         this.description = description;
         this.authorId = authourId;
         this.TagsList = tagsList;
+        
     }
+
+	public Media(String description, Long authorId) {
+		super();
+		this.description = description;
+		this.authorId = authorId;
+	}
+
+	public Media(String description, Long authorId, String post_type, String urlimage) {
+		super();
+		this.description = description;
+		this.authorId = authorId;
+		this.post_type = post_type;
+		this.urlimage = urlimage;
+	}
 }

@@ -2,6 +2,9 @@
 package com.project.bodify.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .password(passwordEncoder.encode(request.getPassword()))
                         .role(role)
                         .build();
-
+user.setCreatedAt(LocalDateTime.now());
                 user = userRepository.save(user);
 
                 String token = jwtServiceImpl.generateToken(user);

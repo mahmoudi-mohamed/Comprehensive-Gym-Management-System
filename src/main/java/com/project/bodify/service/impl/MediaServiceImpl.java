@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service;
 import com.project.bodify.model.Files;
 import com.project.bodify.model.Media;
 import com.project.bodify.repository.MediaRepository;
-import com.project.bodify.service.ProduitService;
 
 @Service
-public  class MediaServiceImpl implements ProduitService {
+public  class MediaServiceImpl  {
 	
 	 @Autowired
 	    MediaRepository mediaRepository;
@@ -26,6 +25,21 @@ public  class MediaServiceImpl implements ProduitService {
 	    
 	    public Media addMedia(String description, List<Files> list,Long author,List<Long> tags) throws Exception {
 	        return mediaRepository.save(new Media(list, description, author, tags));
+	    }
+	    
+	    
+	    public Media  addMedia(String description, long authorId, String post_type, String urlimage) {
+	    	
+	    	return mediaRepository.save(new Media(description, authorId, post_type, urlimage));
+	    	
+	    }
+	    
+	    
+	    
+	    
+	    
+	    public Media addMediatext(String description,Long author) throws Exception {
+	        return mediaRepository.save(new Media( description, author));
 	    }
 
 	 
